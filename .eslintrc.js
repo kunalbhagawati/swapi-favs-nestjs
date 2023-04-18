@@ -17,6 +17,7 @@ module.exports = {
   },
   ignorePatterns: [".eslintrc.js"],
   rules: {
+    "no-return-await": "warn",
     "object-shorthand": "error",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-non-null-assertion": "warn",
