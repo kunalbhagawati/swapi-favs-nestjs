@@ -2,7 +2,7 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { PrismaClient } from "./prisma.client";
 import { ConfigService } from "@nestjs/config";
-import { INestApplication, Logger } from "@nestjs/common";
+import { INestApplication, Logger, ValidationPipe } from "@nestjs/common";
 
 const logger = new Logger();
 
@@ -24,6 +24,8 @@ BigInt.prototype.toJSON = function (): string {
 const configure = async (app: INestApplication) => {
   const prisma = app.get(PrismaClient);
   await prisma.enableShutdownHooks(app);
+
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 };
 
 async function bootstrap() {
@@ -31,7 +33,7 @@ async function bootstrap() {
   const config = app.get<ConfigService>(ConfigService);
 
   await configure(app);
-  const port = config.getOrThrow<number>("app.port")
+  const port = config.getOrThrow<number>("app.port");
 
   logger.log(`Running app on port ${port}`);
   await app.listen(port);
