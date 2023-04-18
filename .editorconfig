@@ -1,0 +1,31 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 80 # Dont change this, otherwise prettier will quickly become `uglier`.
+tab_width = 4
+trim_trailing_whitespace = true
+
+# noinspection EditorConfigOptionRedundancy
+[{*.js, *.ts, *.tsx, *.jsx}]
+indent_size = 2
+indent_style = space
+
+# noinspection EditorConfigOptionRedundancy
+[*.html]
+indent_size = 2
+indent_style = space
+
+# noinspection EditorConfigOptionRedundancy
+[{*.json, .prettierrc, .eslintrc.js}]
+indent_size = 2
+indent_style = space
+
+# noinspection EditorConfigOptionRedundancy
+[{*.yaml, *.yml}]
+indent_size = 2
+indent_style = space
