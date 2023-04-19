@@ -11,8 +11,7 @@ export default class MoviesService {
   constructor(
     private readonly moviesRepo: MoviesRepository,
     private readonly favoritesService: FavoritesService,
-  ) {
-  }
+  ) {}
 
   async getAll(userId?: string, search?: string): Promise<MovieDTO[]> {
     const movies = await this.moviesRepo.getAll();
