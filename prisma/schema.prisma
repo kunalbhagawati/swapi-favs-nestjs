@@ -20,6 +20,7 @@ model UserFavorite {
   favorite_identifier String
   favorite_type       FavoriteType
   custom_label        String?
+  updated_at          DateTime     @updatedAt
   users               User         @relation(fields: [user_id], references: [id], map: "user_favorites_users_id_fk")
 
   @@unique([user_id, favorite_identifier, favorite_type], map: "user_favorites_unique_favorite_id")
