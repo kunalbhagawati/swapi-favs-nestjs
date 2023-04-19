@@ -1,8 +1,15 @@
 import { ConfigFactory } from "./types";
-import { appConfigSchema } from "./schemas";
+import { appConfigSchema, swapiConfigSchema } from "./schemas";
+import { ZodEffects } from "zod";
+import { ZodTypeAny } from "zod/lib/types";
 
-const configFactory: ConfigFactory = (config) => ({
-  app: appConfigSchema.parse(config),
-});
+const configFactory: ConfigFactory = (config) => {
+  const p = (schema: ZodEffects<ZodTypeAny>) => schema.parse(config);
+
+  return {
+    app: p(appConfigSchema),
+    swapi: p(swapiConfigSchema),
+  };
+};
 
 export default configFactory;

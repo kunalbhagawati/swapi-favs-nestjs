@@ -7,3 +7,11 @@ export const appConfigSchema = z
   .transform(({ APP_PORT }) => ({
     port: APP_PORT,
   }));
+
+export const swapiConfigSchema = z
+  .object({
+    SWAPI_BASE_URL: z.string(),
+  })
+  .transform(({ SWAPI_BASE_URL }) => ({
+    baseUrl: SWAPI_BASE_URL,
+  }));
