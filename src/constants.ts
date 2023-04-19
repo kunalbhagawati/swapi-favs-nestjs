@@ -1,4 +1,4 @@
-export enum Favorite {
+export enum FavoriteType {
   Planet = "Planet",
   Movie = "Movie",
 }

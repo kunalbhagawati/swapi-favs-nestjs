@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "../prisma.client";
-import { FavoriteToAdd } from "./favorites.service.types";
+import { FavoriteToAdd, GetUserFavoritesWhere } from "./favorites.types";
 import { User, UserFavorite } from "@prisma/client";
 
 @Injectable()
@@ -14,16 +14,16 @@ export default class FavoritesService {
     const upserts = favorites.map(({ id, type, label }) =>
       this.prisma.userFavorite.upsert({
         where: {
-          user_id_favorite_id_favorite_type: {
+          user_id_favorite_identifier_favorite_type: {
             user_id: user.id,
-            favorite_id: id,
+            favorite_identifier: id,
             favorite_type: type,
           },
         },
         update: { custom_label: label },
         create: {
           user_id: user.id,
-          favorite_id: id,
+          favorite_identifier: id,
           favorite_type: type,
           custom_label: label,
         },
@@ -31,6 +31,14 @@ export default class FavoritesService {
     );
 
     return this.prisma.$transaction(upserts);
+  }
+
+  async getUserFavorites(
+    where: GetUserFavoritesWhere,
+  ): Promise<UserFavorite[]> {
+    return this.prisma.userFavorite.findMany({
+      where,
+    });
   }
 
   /** NOTE Can optimize later to this if needed. */
