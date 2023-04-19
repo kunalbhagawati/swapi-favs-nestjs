@@ -8,6 +8,9 @@ import MoviesService from "./movies/movies.service";
 import UsersController from "./users/users.controller";
 import FavoritesService from "./favorites/favorites.service";
 import { HttpModule } from "@nestjs/axios";
+import PlanetsController from "./planets/planets.controller";
+import PlanetsService from "./planets/planets.service";
+import PlanetsRepository from "./planets/planets.repository";
 import MoviesRepository from "./movies/movies.repository";
 
 @Module({
@@ -19,13 +22,15 @@ import MoviesRepository from "./movies/movies.repository";
     }),
     HttpModule,
   ],
-  controllers: [UsersController, MoviesController],
+  controllers: [UsersController, MoviesController, PlanetsController],
   providers: [
     PrismaClient,
     FavoritesService,
     UsersService,
     MoviesService,
     MoviesRepository,
+    PlanetsService,
+    PlanetsRepository,
   ],
 })
 export class AppModule {}
