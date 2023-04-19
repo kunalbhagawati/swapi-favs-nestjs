@@ -2,7 +2,7 @@
   "name": "swapi-favs-nestjs",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "knl.bhg@gmail.com",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -20,11 +20,15 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.4.0",
+    "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.4.0",
     "@nestjs/platform-express": "^9.4.0",
+    "axios": "^1.3.5",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.0"
+    "rxjs": "^7.8.0",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.4.0",
