@@ -6,4 +6,5 @@ export type Movie = ResponseFilm;
 export type MovieDTO = Movie & {
   updated: string | null;
   is_favourite: boolean;
+  original_title: string;
 };

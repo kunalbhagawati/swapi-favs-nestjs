@@ -36,9 +36,7 @@ export default class FavoritesService {
   async getUserFavorites(
     where: GetUserFavoritesWhere,
   ): Promise<UserFavorite[]> {
-    return this.prisma.userFavorite.findMany({
-      where,
-    });
+    return this.prisma.userFavorite.findMany({ where });
   }
 
   /** NOTE Can optimize later to this if needed. */

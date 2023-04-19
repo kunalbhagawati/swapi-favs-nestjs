@@ -10,4 +10,4 @@ export type FavoriteToAdd = {
 export type GetUserFavoritesWhere = Required<
   Pick<P.UserFavoriteWhereInput, "user_id">
 > &
-  Pick<P.UserFavoriteWhereInput, "favorite_type">;
+  Pick<P.UserFavoriteWhereInput, "favorite_type" | "custom_label">

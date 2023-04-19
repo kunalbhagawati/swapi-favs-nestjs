@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["orderByNulls", "fieldReference", "postgresqlExtensions", "clientExtensions", "extendedWhereUnique"]
+  previewFeatures = ["orderByNulls", "fieldReference", "postgresqlExtensions", "clientExtensions", "extendedWhereUnique", "fullTextSearch", "fullTextIndex"]
   binaryTargets   = ["native"]
 }
 
