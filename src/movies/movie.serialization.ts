@@ -1,5 +1,4 @@
-import { Movie } from "./movies.types";
-import { ResponseFilm } from "./movies.repository.types";
+import { Movie, ResponseFilm } from "./movies.types";
 import { pick } from "ramda";
 
 export const serializeFromSWAPI = (obj: ResponseFilm): Movie =>
