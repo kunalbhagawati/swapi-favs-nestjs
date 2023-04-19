@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Query } from "@nestjs/common";
 import MoviesService from "./movies.service";
 import { UserId } from "../lib/user.decorator";
 
@@ -8,7 +8,7 @@ export default class MoviesController {
   }
 
   @Get()
-  async getMovies(@UserId() userId: string) {
-    return this.moviesService.getAll(userId);
+  async getMovies(@UserId() userId: string, @Query("search") search: string) {
+    return this.moviesService.getAll(userId, `${search}`);
   }
 }

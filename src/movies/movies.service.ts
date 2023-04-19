@@ -2,8 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { Movie, MovieDTO } from "./movies.types";
 import MoviesRepository from "./movies.repository";
 import FavoritesService from "../favorites/favorites.service";
-import { indexBy, isNil } from "ramda";
+import { indexBy, isNil, prop } from "ramda";
 import { FavoriteType } from "../constants";
+import { UserFavorite } from "@prisma/client";
 
 @Injectable()
 export default class MoviesService {
@@ -13,47 +14,90 @@ export default class MoviesService {
   ) {
   }
 
-  async getAll(userId?: string): Promise<MovieDTO[]> {
+  async getAll(userId?: string, search?: string): Promise<MovieDTO[]> {
     const movies = await this.moviesRepo.getAll();
 
-    if (!isNil(userId)) {
-      return this.mergeWithFavorites(userId, movies);
+    if (isNil(userId)) {
+      // No user sent. Send back the movies directly.
+      return movies.map(this.defaultMovieDTO);
     }
 
-    return movies.map(this.defaultMovieDTO);
+    return this.syncWithUserFavorites(userId, movies, search);
   }
 
-  private async mergeWithFavorites(
+  private async syncWithUserFavorites(
+    userId: string,
+    movies: Movie[],
+    search?: string,
+  ): Promise<MovieDTO[]> {
+    if (isNil(search)) {
+      // No search term sent.
+      // Send back data merged with user favorites metadata.
+      return this.mergeAllWithFavorites(userId, movies);
+    }
+
+    return this.filterSearchResultsWithFavorites(userId, movies, search);
+  }
+
+  private async mergeAllWithFavorites(
     userId: string,
     movies: Movie[],
   ): Promise<MovieDTO[]> {
-    const favsMap = indexBy(
-      (f) => f.favorite_identifier,
-      await this.favoritesService.getUserFavorites({
-        user_id: userId,
-        favorite_type: FavoriteType.Movie,
-      }),
-    );
+    const favsMap: Record<UserFavorite["favorite_identifier"], UserFavorite> =
+      indexBy(
+        prop("favorite_identifier"),
+        await this.favoritesService.getUserFavorites({
+          user_id: userId,
+          favorite_type: FavoriteType.Movie,
+        }),
+      );
 
-    const merge = (m: Movie): MovieDTO => {
-      const f = favsMap[m.url];
-
-      if (isNil(f)) return this.defaultMovieDTO(m);
-
-      return {
-        ...m,
-        title: f.custom_label ?? m.title,
-        updated: f.updated_at.toISOString(), // TODO this must use something to reference it.
-        is_favourite: true,
-      };
-    };
+    const merge = (m: Movie): MovieDTO =>
+      this.mergeWithFavOrDefault(m, favsMap[m.url]);
 
     return movies.map(merge);
+  }
+
+  private async filterSearchResultsWithFavorites(
+    userId: string,
+    movies: Movie[],
+    search: string,
+  ) {
+    const favs = await this.favoritesService.getUserFavorites({
+      user_id: userId,
+      favorite_type: FavoriteType.Movie,
+      custom_label: { contains: search },
+    });
+
+    const moviesMap = indexBy(prop("url"), movies);
+
+    return favs.map((f) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const movie = moviesMap[f.favorite_identifier]!;
+      return this.mergeWithFav(movie, f);
+    });
   }
 
   private defaultMovieDTO = (m: Movie): MovieDTO => ({
     ...m,
     updated: null,
     is_favourite: false,
+    original_title: m.title,
   });
+
+  private mergeWithFav = (m: Movie, fav: UserFavorite): MovieDTO => ({
+    ...m,
+    title: fav.custom_label ?? m.title,
+    updated: fav.updated_at.toISOString(),
+    is_favourite: true,
+    original_title: m.title,
+  });
+
+  private mergeWithFavOrDefault = (
+    m: Movie,
+    fav?: UserFavorite | null,
+  ): MovieDTO => {
+    if (isNil(fav)) return this.defaultMovieDTO(m);
+    return this.mergeWithFav(m, fav);
+  };
 }
