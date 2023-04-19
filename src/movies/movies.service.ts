@@ -43,7 +43,7 @@ export default class MoviesService {
       return {
         ...m,
         title: f.custom_label ?? m.title,
-        updated: null, // TODO this must use something to reference it.
+        updated: f.updated_at.toISOString(), // TODO this must use something to reference it.
         is_favourite: true,
       };
     };
