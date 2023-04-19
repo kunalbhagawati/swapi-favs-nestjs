@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import configFactory from "./config";
+import { PrismaClient } from "./prisma.client";
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import configFactory from "./config";
     }),
   ],
   controllers: [],
-  providers: [],
+  providers: [PrismaClient],
 })
 export class AppModule {}
