@@ -7,7 +7,7 @@ export type ResponsePlanet = {
 // Type alias for now. Can change into a separate model later.
 export type Planet = ResponsePlanet;
 
-export type PlanetDTO = Planet & {
+export type PlanetWithFavoriteMetadata = Planet & {
   updated: string | null;
   is_favourite: boolean;
   original_name: string;
