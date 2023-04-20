@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { Movie, MovieDTO } from "./movies.types";
+import { Movie, MovieWithFavoriteMetadata } from "./movies.types";
 import MoviesRepository from "./movies.repository";
 import FavoritesService from "../favorites/favorites.service";
 import { indexBy, isNil, prop } from "ramda";
-import { FavoriteType } from "../constants";
+import { ResourceType } from "../constants";
 import { UserFavorite } from "@prisma/client";
 
 @Injectable()
@@ -13,7 +13,10 @@ export default class MoviesService {
     private readonly favoritesService: FavoritesService,
   ) {}
 
-  async getAll(userId?: string, search?: string): Promise<MovieDTO[]> {
+  async getAll(
+    userId?: string,
+    search?: string,
+  ): Promise<MovieWithFavoriteMetadata[]> {
     const movies = await this.moviesRepo.getAll();
 
     if (isNil(userId)) {
@@ -28,7 +31,7 @@ export default class MoviesService {
     userId: string,
     movies: Movie[],
     search?: string,
-  ): Promise<MovieDTO[]> {
+  ): Promise<MovieWithFavoriteMetadata[]> {
     if (isNil(search)) {
       // No search term sent.
       // Send back data merged with user favorites metadata.
@@ -41,17 +44,17 @@ export default class MoviesService {
   private async mergeAllWithFavorites(
     userId: string,
     movies: Movie[],
-  ): Promise<MovieDTO[]> {
+  ): Promise<MovieWithFavoriteMetadata[]> {
     const favsMap: Record<UserFavorite["favorite_identifier"], UserFavorite> =
       indexBy(
         prop("favorite_identifier"),
         await this.favoritesService.getUserFavorites({
           user_id: userId,
-          favorite_type: FavoriteType.Movie,
+          favorite_type: ResourceType.Movie,
         }),
       );
 
-    const merge = (m: Movie): MovieDTO =>
+    const merge = (m: Movie): MovieWithFavoriteMetadata =>
       this.mergeWithFavOrDefault(m, favsMap[m.url]);
 
     return movies.map(merge);
@@ -64,7 +67,7 @@ export default class MoviesService {
   ) {
     const favs = await this.favoritesService.getUserFavorites({
       user_id: userId,
-      favorite_type: FavoriteType.Movie,
+      favorite_type: ResourceType.Movie,
       custom_label: { contains: search },
     });
 
@@ -77,14 +80,17 @@ export default class MoviesService {
     });
   }
 
-  private defaultMovieDTO = (m: Movie): MovieDTO => ({
+  private defaultMovieDTO = (m: Movie): MovieWithFavoriteMetadata => ({
     ...m,
     updated: null,
     is_favourite: false,
     original_title: m.title,
   });
 
-  private mergeWithFav = (m: Movie, fav: UserFavorite): MovieDTO => ({
+  private mergeWithFav = (
+    m: Movie,
+    fav: UserFavorite,
+  ): MovieWithFavoriteMetadata => ({
     ...m,
     title: fav.custom_label ?? m.title,
     updated: fav.updated_at.toISOString(),
@@ -95,7 +101,7 @@ export default class MoviesService {
   private mergeWithFavOrDefault = (
     m: Movie,
     fav?: UserFavorite | null,
-  ): MovieDTO => {
+  ): MovieWithFavoriteMetadata => {
     if (isNil(fav)) return this.defaultMovieDTO(m);
     return this.mergeWithFav(m, fav);
   };

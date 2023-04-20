@@ -2,9 +2,9 @@ import { Injectable } from "@nestjs/common";
 import FavoritesService from "../favorites/favorites.service";
 import { indexBy, isNil, prop } from "ramda";
 import { UserFavorite } from "@prisma/client";
-import { FavoriteType } from "../constants";
+import { ResourceType } from "../constants";
 import PlanetsRepository from "./planets.repository";
-import { Planet, PlanetDTO } from "./planets.types";
+import { Planet, PlanetWithFavoriteMetadata } from "./planets.types";
 
 @Injectable()
 export default class PlanetsService {
@@ -13,7 +13,10 @@ export default class PlanetsService {
     private readonly favoritesService: FavoritesService,
   ) {}
 
-  async getAll(userId?: string, search?: string): Promise<PlanetDTO[]> {
+  async getAll(
+    userId?: string,
+    search?: string,
+  ): Promise<PlanetWithFavoriteMetadata[]> {
     const planets = await this.planetsRepo.getAll();
 
     if (isNil(userId)) {
@@ -28,7 +31,7 @@ export default class PlanetsService {
     userId: string,
     planets: Planet[],
     search?: string,
-  ): Promise<PlanetDTO[]> {
+  ): Promise<PlanetWithFavoriteMetadata[]> {
     if (isNil(search)) {
       // No search term sent.
       // Send back data merged with user favorites metadata.
@@ -41,17 +44,17 @@ export default class PlanetsService {
   private async mergeAllWithFavorites(
     userId: string,
     planets: Planet[],
-  ): Promise<PlanetDTO[]> {
+  ): Promise<PlanetWithFavoriteMetadata[]> {
     const favsMap: Record<UserFavorite["favorite_identifier"], UserFavorite> =
       indexBy(
         prop("favorite_identifier"),
         await this.favoritesService.getUserFavorites({
           user_id: userId,
-          favorite_type: FavoriteType.Planet,
+          favorite_type: ResourceType.Planet,
         }),
       );
 
-    const merge = (m: Planet): PlanetDTO =>
+    const merge = (m: Planet): PlanetWithFavoriteMetadata =>
       this.mergeWithFavOrDefault(m, favsMap[m.url]);
 
     return planets.map(merge);
@@ -64,7 +67,7 @@ export default class PlanetsService {
   ) {
     const favs = await this.favoritesService.getUserFavorites({
       user_id: userId,
-      favorite_type: FavoriteType.Planet,
+      favorite_type: ResourceType.Planet,
       custom_label: { contains: search },
     });
 
@@ -77,14 +80,17 @@ export default class PlanetsService {
     });
   }
 
-  private defaultPlanetDTO = (p: Planet): PlanetDTO => ({
+  private defaultPlanetDTO = (p: Planet): PlanetWithFavoriteMetadata => ({
     ...p,
     updated: null,
     is_favourite: false,
     original_name: p.name,
   });
 
-  private mergeWithFav = (p: Planet, fav: UserFavorite): PlanetDTO => ({
+  private mergeWithFav = (
+    p: Planet,
+    fav: UserFavorite,
+  ): PlanetWithFavoriteMetadata => ({
     ...p,
     name: fav.custom_label ?? p.name,
     updated: fav.updated_at.toISOString(),
@@ -95,7 +101,7 @@ export default class PlanetsService {
   private mergeWithFavOrDefault = (
     p: Planet,
     fav?: UserFavorite | null,
-  ): PlanetDTO => {
+  ): PlanetWithFavoriteMetadata => {
     if (isNil(fav)) return this.defaultPlanetDTO(p);
     return this.mergeWithFav(p, fav);
   };

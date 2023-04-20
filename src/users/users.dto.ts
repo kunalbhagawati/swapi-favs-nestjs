@@ -8,7 +8,7 @@ import {
 } from "class-validator";
 import { Type } from "class-transformer";
 import type {FavoriteToAdd as FavoriteToAddType} from "../favorites/favorites.types";
-import { FavoriteType } from "../constants";
+import { ResourceType } from "../constants";
 
 // NOTE Nest favours classes instead of typescript types.
 //  https://docs.nestjs.com/controllers#request-payloads
@@ -19,8 +19,8 @@ export class CreateUserDTO {
 
 export class FavoriteToAdd implements FavoriteToAddType {
   @IsNotEmpty()
-  @IsEnum(FavoriteType)
-  type: FavoriteType;
+  @IsEnum(ResourceType)
+  type: ResourceType;
 
   @IsNotEmpty()
   @IsUUID(4)

@@ -1,5 +1,5 @@
-import { FavoriteType } from "../constants";
 import { Prisma as P } from ".prisma/client";
+import type { FavoriteType } from "@prisma/client";
 
 export type FavoriteToAdd = {
   type: FavoriteType;
