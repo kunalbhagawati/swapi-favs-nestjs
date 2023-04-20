@@ -34,6 +34,7 @@ import { RedisModule } from "@liaoliaots/nestjs-redis";
           config: {
             host: redisConfig.host,
             port: redisConfig.port,
+            db: redisConfig.db,
           },
         };
       },
