@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import FavoritesService from "../favorites/favorites.service";
-import { indexBy, isNil, prop } from "ramda";
+import { indexBy, isNil, map, prop } from "ramda";
 import { UserFavorite } from "@prisma/client";
 import { ResourceType } from "../constants";
 import PlanetsRepository from "./planets.repository";
 import { Planet, PlanetWithFavoriteMetadata } from "./planets.types";
+import { mergeWithFavOrDefault } from "./planets.merge-with-metadata";
 
 @Injectable()
 export default class PlanetsService {
@@ -21,7 +22,7 @@ export default class PlanetsService {
 
     if (isNil(userId)) {
       // No user sent. Send back the planets directly.
-      return planets.map(this.defaultPlanetDTO);
+      return map(mergeWithFavOrDefault, planets);
     }
 
     return this.syncWithUserFavorites(userId, planets, search);
@@ -55,7 +56,7 @@ export default class PlanetsService {
       );
 
     const merge = (m: Planet): PlanetWithFavoriteMetadata =>
-      this.mergeWithFavOrDefault(m, favsMap[m.url]);
+      mergeWithFavOrDefault(m, favsMap[m.url]);
 
     return planets.map(merge);
   }
@@ -76,33 +77,7 @@ export default class PlanetsService {
     return favs.map((f) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const planet = planetsMap[f.favorite_identifier]!;
-      return this.mergeWithFav(planet, f);
+      return mergeWithFavOrDefault(planet, f);
     });
   }
-
-  private defaultPlanetDTO = (p: Planet): PlanetWithFavoriteMetadata => ({
-    ...p,
-    updated: null,
-    is_favourite: false,
-    original_name: p.name,
-  });
-
-  private mergeWithFav = (
-    p: Planet,
-    fav: UserFavorite,
-  ): PlanetWithFavoriteMetadata => ({
-    ...p,
-    name: fav.custom_label ?? p.name,
-    updated: fav.updated_at.toISOString(),
-    is_favourite: true,
-    original_name: p.name,
-  });
-
-  private mergeWithFavOrDefault = (
-    p: Planet,
-    fav?: UserFavorite | null,
-  ): PlanetWithFavoriteMetadata => {
-    if (isNil(fav)) return this.defaultPlanetDTO(p);
-    return this.mergeWithFav(p, fav);
-  };
 }

@@ -2,9 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { Movie, MovieWithFavoriteMetadata } from "./movies.types";
 import MoviesRepository from "./movies.repository";
 import FavoritesService from "../favorites/favorites.service";
-import { indexBy, isNil, prop } from "ramda";
+import { indexBy, isNil, map, prop } from "ramda";
 import { ResourceType } from "../constants";
 import { UserFavorite } from "@prisma/client";
+import { mergeWithFavOrDefault } from "./movies.merge-with-metadata";
 
 @Injectable()
 export default class MoviesService {
@@ -21,7 +22,7 @@ export default class MoviesService {
 
     if (isNil(userId)) {
       // No user sent. Send back the movies directly.
-      return movies.map(this.defaultMovieDTO);
+      return map(mergeWithFavOrDefault, movies);
     }
 
     return this.syncWithUserFavorites(userId, movies, search);
@@ -55,7 +56,7 @@ export default class MoviesService {
       );
 
     const merge = (m: Movie): MovieWithFavoriteMetadata =>
-      this.mergeWithFavOrDefault(m, favsMap[m.url]);
+      mergeWithFavOrDefault(m, favsMap[m.url]);
 
     return movies.map(merge);
   }
@@ -76,33 +77,7 @@ export default class MoviesService {
     return favs.map((f) => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const movie = moviesMap[f.favorite_identifier]!;
-      return this.mergeWithFav(movie, f);
+      return mergeWithFavOrDefault(movie, f);
     });
   }
-
-  private defaultMovieDTO = (m: Movie): MovieWithFavoriteMetadata => ({
-    ...m,
-    updated: null,
-    is_favourite: false,
-    original_title: m.title,
-  });
-
-  private mergeWithFav = (
-    m: Movie,
-    fav: UserFavorite,
-  ): MovieWithFavoriteMetadata => ({
-    ...m,
-    title: fav.custom_label ?? m.title,
-    updated: fav.updated_at.toISOString(),
-    is_favourite: true,
-    original_title: m.title,
-  });
-
-  private mergeWithFavOrDefault = (
-    m: Movie,
-    fav?: UserFavorite | null,
-  ): MovieWithFavoriteMetadata => {
-    if (isNil(fav)) return this.defaultMovieDTO(m);
-    return this.mergeWithFav(m, fav);
-  };
 }

@@ -8,6 +8,7 @@ import MoviesService from "./movies/movies.service";
 import UsersController from "./users/users.controller";
 import FavoritesService from "./favorites/favorites.service";
 import { HttpModule } from "@nestjs/axios";
+import FavoritesRepository from './favorites/favorites.repository';
 import PlanetsController from "./planets/planets.controller";
 import PlanetsService from "./planets/planets.service";
 import PlanetsRepository from "./planets/planets.repository";
@@ -33,6 +34,7 @@ import SwapiRepository from "./common/swapi/swapi-repository";
     MoviesRepository,
     PlanetsService,
     PlanetsRepository,
+    FavoritesRepository,
   ],
 })
 export class AppModule {}
