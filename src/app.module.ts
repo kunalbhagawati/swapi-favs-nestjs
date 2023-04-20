@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import configFactory from "./config";
 import { PrismaClient } from "./prisma.client";
 import UsersService from "./users/users.service";
@@ -8,12 +8,13 @@ import MoviesService from "./movies/movies.service";
 import UsersController from "./users/users.controller";
 import FavoritesService from "./favorites/favorites.service";
 import { HttpModule } from "@nestjs/axios";
-import FavoritesRepository from './favorites/favorites.repository';
+import FavoritesRepository from "./favorites/favorites.repository";
 import PlanetsController from "./planets/planets.controller";
 import PlanetsService from "./planets/planets.service";
 import PlanetsRepository from "./planets/planets.repository";
 import MoviesRepository from "./movies/movies.repository";
 import SwapiRepository from "./common/swapi/swapi-repository";
+import { RedisModule } from "@liaoliaots/nestjs-redis";
 
 @Module({
   imports: [
@@ -23,6 +24,20 @@ import SwapiRepository from "./common/swapi/swapi-repository";
       validate: configFactory,
     }),
     HttpModule,
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => {
+        const redisConfig = config.getOrThrow("redis");
+        return {
+          readyLog: true,
+          config: {
+            host: redisConfig.host,
+            port: redisConfig.port,
+          },
+        };
+      },
+    }),
   ],
   controllers: [UsersController, MoviesController, PlanetsController],
   providers: [

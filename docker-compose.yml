@@ -1,6 +1,14 @@
 version: "3"
 
 services:
+  redis:
+    image: "redis:6-alpine"
+    restart: always
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - "redis:/usr/local/etc/redis"
+
   postgres:
     image: "postgres:15.2-alpine"
     restart: always
@@ -15,3 +23,4 @@ services:
 
 volumes:
   postgres:
+  redis:

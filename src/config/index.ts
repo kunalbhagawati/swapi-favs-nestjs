@@ -1,5 +1,9 @@
 import { ConfigFactory } from "./types";
-import { appConfigSchema, swapiConfigSchema } from "./schemas";
+import {
+  appConfigSchema,
+  redisConfigSchema,
+  swapiConfigSchema,
+} from "./schemas";
 import { ZodEffects } from "zod";
 import { ZodTypeAny } from "zod/lib/types";
 
@@ -9,6 +13,7 @@ const configFactory: ConfigFactory = (config) => {
   return {
     app: p(appConfigSchema),
     swapi: p(swapiConfigSchema),
+    redis: p(redisConfigSchema),
   };
 };
 
