@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import FavoritesService from "../favorites/favorites.service";
 import { indexBy, isNil, prop } from "ramda";
 import { UserFavorite } from "@prisma/client";
-import { FavoriteType } from "../constants";
+import { ResourceType } from "../constants";
 import PlanetsRepository from "./planets.repository";
 import { Planet, PlanetWithFavoriteMetadata } from "./planets.types";
 
@@ -50,7 +50,7 @@ export default class PlanetsService {
         prop("favorite_identifier"),
         await this.favoritesService.getUserFavorites({
           user_id: userId,
-          favorite_type: FavoriteType.Planet,
+          favorite_type: ResourceType.Planet,
         }),
       );
 
@@ -67,7 +67,7 @@ export default class PlanetsService {
   ) {
     const favs = await this.favoritesService.getUserFavorites({
       user_id: userId,
-      favorite_type: FavoriteType.Planet,
+      favorite_type: ResourceType.Planet,
       custom_label: { contains: search },
     });
 

@@ -12,6 +12,7 @@ import PlanetsController from "./planets/planets.controller";
 import PlanetsService from "./planets/planets.service";
 import PlanetsRepository from "./planets/planets.repository";
 import MoviesRepository from "./movies/movies.repository";
+import SwapiRepository from "./common/swapi/swapi-repository";
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import MoviesRepository from "./movies/movies.repository";
   controllers: [UsersController, MoviesController, PlanetsController],
   providers: [
     PrismaClient,
+    SwapiRepository,
     FavoritesService,
     UsersService,
     MoviesService,

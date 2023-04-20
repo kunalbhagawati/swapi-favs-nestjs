@@ -1,14 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { SwapiConfig } from "../config/types";
-import axios from "axios";
-import { ConfigService } from "@nestjs/config";
 import { Movie } from "./movies.types";
-import { serializeFromSWAPI } from "./movie.serialization";
+import SwapiRepository from "../common/swapi/swapi-repository";
 
 @Injectable()
 export default class MoviesRepository {
-  constructor(private readonly config: ConfigService) {
-  }
+  constructor(private readonly swapiRepo: SwapiRepository) {}
 
   /**
    * Gets all the movies found in swapi.dev.
@@ -17,9 +13,5 @@ export default class MoviesRepository {
    *  We do not do any pagination for this yet, because that will be overkill.
    *  We can cache this later if needed.
    */
-  async getAll(): Promise<Movie[]> {
-    const config = this.config.getOrThrow<SwapiConfig>("swapi");
-    const response = await axios.get(`${config.baseUrl}/films`);
-    return response.data.results.map(serializeFromSWAPI);
-  }
+  getAll = async (): Promise<Movie[]> => this.swapiRepo.getAllFilms();
 }

@@ -3,7 +3,7 @@ import { Movie, MovieWithFavoriteMetadata } from "./movies.types";
 import MoviesRepository from "./movies.repository";
 import FavoritesService from "../favorites/favorites.service";
 import { indexBy, isNil, prop } from "ramda";
-import { FavoriteType } from "../constants";
+import { ResourceType } from "../constants";
 import { UserFavorite } from "@prisma/client";
 
 @Injectable()
@@ -50,7 +50,7 @@ export default class MoviesService {
         prop("favorite_identifier"),
         await this.favoritesService.getUserFavorites({
           user_id: userId,
-          favorite_type: FavoriteType.Movie,
+          favorite_type: ResourceType.Movie,
         }),
       );
 
@@ -67,7 +67,7 @@ export default class MoviesService {
   ) {
     const favs = await this.favoritesService.getUserFavorites({
       user_id: userId,
-      favorite_type: FavoriteType.Movie,
+      favorite_type: ResourceType.Movie,
       custom_label: { contains: search },
     });
 
