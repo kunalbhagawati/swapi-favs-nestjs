@@ -5,31 +5,14 @@ import { PrismaClient } from "../prisma.client";
 
 @Injectable()
 export default class FavoritesRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaClient) {
+  }
 
   async upsertFavsForUser(
     user: User,
     favorites: FavoriteToAdd[],
   ): Promise<UserFavorite[]> {
-    const upserts = favorites.map(({ id, type, label }) =>
-      this.prisma.userFavorite.upsert({
-        where: {
-          user_id_favorite_identifier_favorite_type: {
-            user_id: user.id,
-            favorite_identifier: id,
-            favorite_type: type,
-          },
-        },
-        update: { custom_label: label },
-        create: {
-          user_id: user.id,
-          favorite_identifier: id,
-          favorite_type: type,
-          custom_label: label,
-        },
-      }),
-    );
-
+    const upserts = favorites.map((f) => this.upsertForUser(user, f));
     return this.prisma.$transaction(upserts);
   }
 
@@ -63,4 +46,22 @@ export default class FavoritesRepository {
   ): Promise<UserFavorite[]> {
     return this.prisma.userFavorite.findMany({ where });
   }
+
+  private upsertForUser = (user: User, { id, type, label }: FavoriteToAdd) =>
+    this.prisma.userFavorite.upsert({
+      where: {
+        user_id_favorite_identifier_favorite_type: {
+          user_id: user.id,
+          favorite_identifier: id,
+          favorite_type: type,
+        },
+      },
+      update: { custom_label: label },
+      create: {
+        user_id: user.id,
+        favorite_identifier: id,
+        favorite_type: type,
+        custom_label: label,
+      },
+    });
 }
