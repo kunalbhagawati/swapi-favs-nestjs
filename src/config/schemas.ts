@@ -20,8 +20,10 @@ export const redisConfigSchema = z
   .object({
     REDIS_HOST: z.string(),
     REDIS_PORT: z.coerce.number().default(6379),
+    REDIS_DB: z.coerce.number().gte(0).lte(9),
   })
-  .transform(({ REDIS_HOST, REDIS_PORT }) => ({
+  .transform(({ REDIS_HOST, REDIS_PORT, REDIS_DB }) => ({
     host: REDIS_HOST,
     port: REDIS_PORT,
+    db: REDIS_DB,
   }));
