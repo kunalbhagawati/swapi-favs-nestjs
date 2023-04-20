@@ -22,6 +22,9 @@ export default class UsersController {
     return { user: await this.usersService.add(dto.id) };
   }
 
+  /**
+   * Add a list of favorites for the user.
+   */
   @Post("/:id/favorites")
   async saveFavorites(@Param("id") id: string, @Body() dto: AddFavoritesDTO) {
     const user = await this.usersService.get(id);
@@ -30,7 +33,10 @@ export default class UsersController {
     }
 
     return {
-      favorites: await this.favoritesService.saveUserFavorites(user, dto.favorites),
+      favorites: await this.favoritesService.saveUserFavorites(
+        user,
+        dto.favorites,
+      ),
     };
   }
 }

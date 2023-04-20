@@ -10,6 +10,7 @@ import { Type } from "class-transformer";
 import type {FavoriteToAdd as FavoriteToAddType} from "../favorites/favorites.types";
 import { ResourceType } from "../constants";
 
+// Request body representations. Allows us to validate requests.
 // NOTE Nest favours classes instead of typescript types.
 //  https://docs.nestjs.com/controllers#request-payloads
 
