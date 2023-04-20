@@ -15,3 +15,13 @@ export const swapiConfigSchema = z
   .transform(({ SWAPI_BASE_URL }) => ({
     baseUrl: SWAPI_BASE_URL,
   }));
+
+export const redisConfigSchema = z
+  .object({
+    REDIS_HOST: z.string(),
+    REDIS_PORT: z.coerce.number().default(6379),
+  })
+  .transform(({ REDIS_HOST, REDIS_PORT }) => ({
+    host: REDIS_HOST,
+    port: REDIS_PORT,
+  }));
