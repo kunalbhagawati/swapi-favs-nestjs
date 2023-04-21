@@ -1,3 +1,22 @@
+### Architecture
+
+## Flow of data
+
+![Data Flow](./data-flow.png)
+
+The system first receives a request that's forwarded to a `controller`
+method.
+
+This guy calls on the relevant `service`s which are basically encapsulation of
+the business logic. They are (ideally) transparent to underlying CRUD
+mechanisms (i.e. the data layer).
+
+Services use `repositories` which abstract away the underlying data structures
+that encapsulate the state of the system. These `repositories` are the entry
+point to the underlying data layer.
+
+## Assumptions
+
 - In larger codebases, I'd have preferred the `usecase-services-repo` pattern
   over the standard `controller-services` funda, to better encapsulate
   business-logic and separate concerns. But in the interest of time, and to

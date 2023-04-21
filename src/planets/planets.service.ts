@@ -7,6 +7,12 @@ import PlanetsRepository from "./planets.repository";
 import { Planet, PlanetWithFavoriteMetadata } from "./planets.types";
 import { mergeWithFavOrDefault } from "./planets.merge-with-metadata";
 
+/**
+ * Business logic actions for planets related functionality.
+ *
+ * Entrypoint for all things on a business-logic related to users.
+ * Includes commands, actions, etc.
+ */
 @Injectable()
 export default class PlanetsService {
   constructor(

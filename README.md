@@ -22,6 +22,7 @@ Copy the `.env.template` file into `.env` and `.env.test` files.
 ```bash
 $ cp .env.template .env
 $ cp .env.template .env.test
+$ # Append "-test" to `POSTGRES_DBNAME` in `.env.test`.
 ```
 
 ## Docs and notes
@@ -33,6 +34,9 @@ Please do go through [docs](./docs) once before you start. :)
 ```bash
 # Spin up the third-party containers
 $ docker compose up -d
+
+# Create the test db
+$ docker exec -it swapi-favs-postgres sh -c 'psql -U $POSTGRES_USER -c "CREATE DATABASE \"${POSTGRES_DB}-test\""' # or replace ${POSTGRES_DB}-test with your DB name in .env.test
 
 # Migrate the DB
 $ npx prisma migrate deploy

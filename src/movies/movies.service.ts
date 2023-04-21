@@ -7,6 +7,12 @@ import { ResourceType } from "../constants";
 import { UserFavorite } from "@prisma/client";
 import { mergeWithFavOrDefault } from "./movies.merge-with-metadata";
 
+/**
+ * Business logic actions for movies related functionality.
+ *
+ * Entrypoint for all things on a business-logic related to users.
+ * Includes commands, actions, etc.
+ */
 @Injectable()
 export default class MoviesService {
   constructor(

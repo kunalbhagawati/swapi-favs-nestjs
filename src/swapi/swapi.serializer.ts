@@ -1,6 +1,6 @@
-import { Movie } from "../../movies/movies.types";
+import { Movie } from "../movies/movies.types";
 import { pick } from "ramda";
-import { Planet } from "../../planets/planets.types";
+import { Planet } from "../planets/planets.types";
 
 export const serialize = <T extends Movie | Planet>(
   obj: unknown,

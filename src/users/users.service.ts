@@ -3,6 +3,12 @@ import { PrismaClient } from "../prisma.client";
 import { User } from "@prisma/client";
 import { isNil } from "ramda";
 
+/**
+ * Business logic actions for users related functionality.
+ *
+ * Entrypoint for all things on a business-logic related to users.
+ * Includes commands, actions, etc.
+ */
 @Injectable()
 export default class UsersService {
   constructor(private readonly prisma: PrismaClient) {}

@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { ResourceType } from "../../constants";
-import { SwapiConfig } from "../../config/types";
+import { ResourceType } from "../constants";
+import { SwapiConfig } from "../config/types";
 import axios from "axios";
 import { ConfigService } from "@nestjs/config";
-import { serializeFilm, serializePlanet } from "./swapi-serializer";
-import { Movie } from "../../movies/movies.types";
-import { Planet } from "../../planets/planets.types";
+import { serializeFilm, serializePlanet } from "./swapi.serializer";
+import { Movie } from "../movies/movies.types";
+import { Planet } from "../planets/planets.types";
 import { InjectRedis } from "@liaoliaots/nestjs-redis";
 import Redis from "ioredis";
 import { isEmpty, isNil, map, reduce, values } from "ramda";
@@ -30,8 +30,7 @@ export default class SwapiRepository {
   constructor(
     @InjectRedis() private readonly redis: Redis,
     private readonly nestConfig: ConfigService,
-  ) {
-  }
+  ) {}
 
   get config(): SwapiConfig {
     return this.nestConfig.getOrThrow<SwapiConfig>("swapi");

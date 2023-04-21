@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Planet } from "./planets.types";
-import SwapiRepository from "../common/swapi/swapi-repository";
+import SwapiRepository from "../swapi/swapi.repository";
 
 @Injectable()
 export default class PlanetsRepository {

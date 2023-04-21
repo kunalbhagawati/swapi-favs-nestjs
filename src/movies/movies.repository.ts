@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Movie } from "./movies.types";
-import SwapiRepository from "../common/swapi/swapi-repository";
+import SwapiRepository from "../swapi/swapi.repository";
 
 @Injectable()
 export default class MoviesRepository {
