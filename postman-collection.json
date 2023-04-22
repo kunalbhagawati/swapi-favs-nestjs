@@ -1,0 +1,82 @@
+{
+	"info": {
+		"_postman_id": "aba9ffe8-e104-497a-a14f-f0975357cd4d",
+		"name": "SWAPI Favs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26429776"
+	},
+	"item": [
+		{
+			"name": "Add an User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/users/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Planets",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "user-id",
+						"value": "9a6e608f-d3a3-4641-9094-7c96e25c5a95",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/planets/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"planets",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Movies",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "user-id",
+						"value": "9a6e608f-d3a3-4641-9094-7c96e25c5a95",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/movies/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"movies",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -54,6 +54,20 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## APIs
+
+- [Create users] `curl --location --request POST 'http://localhost:3000/users/'`
+- [Get planets] `curl --location 'http://localhost:3000/planets/?search=BHARAAN'
+  --header 'user-id: 63717ed2-cfbc-405d-9baf-f2b30c11d360'`
+- [Get movies] `curl --location 'http://localhost:3000/movies/?search=few'
+  --header 'user-id: 63717ed2-cfbc-405d-9baf-f2b30c11d360'`
+
+> APIs are available via a postman collection (./postman-collection.json)
+>
+> Use the "create user" API to create a new user.
+>
+> Change the `user-id` in the GET API headers to the user-id created in the "create user" API.
+
 ## Test
 
 ```bash
