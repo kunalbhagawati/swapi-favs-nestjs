@@ -27,6 +27,41 @@
 			"response": []
 		},
 		{
+			"name": "Add favorites for user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "user-id",
+						"value": "e251c7db-27e1-49e6-816e-6550e2107ab4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"favorites\": [\n        {\n            \"id\": \"https://swapi.dev/api/films/1/\",\n            \"type\": \"Movie\",\n            \"label\": \"An old hope\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/favorites/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"favorites",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Planets",
 			"request": {
 				"method": "GET",
@@ -75,6 +110,14 @@
 						""
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}

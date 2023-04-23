@@ -57,6 +57,18 @@ $ npm run start:prod
 ## APIs
 
 - [Create users] `curl --location --request POST 'http://localhost:3000/users/'`
+- [Add favorite] `curl --location 'http://localhost:3000/favorites/'
+  --header 'user-id: e251c7db-27e1-49e6-816e-6550e2107ab4'
+  --header 'Content-Type: application/json'
+  --data '{
+  "favorites": [
+  {
+  "id": "https://swapi.dev/api/films/1/",
+  "type": "Movie",
+  "label": "An old hope"
+  }
+  ]
+  }'`
 - [Get planets] `curl --location 'http://localhost:3000/planets/?search=BHARAAN'
   --header 'user-id: 63717ed2-cfbc-405d-9baf-f2b30c11d360'`
 - [Get movies] `curl --location 'http://localhost:3000/movies/?search=few'

@@ -27,7 +27,6 @@ export class FavoriteToAdd implements FavoriteToAddType {
   type: ResourceType;
 
   @IsNotEmpty()
-  @IsUUID(4)
   id: string;
 
   // noinspection RegExpRedundantEscape

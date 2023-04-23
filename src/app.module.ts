@@ -15,6 +15,7 @@ import PlanetsRepository from "./planets/planets.repository";
 import MoviesRepository from "./movies/movies.repository";
 import SwapiRepository from "./swapi/swapi.repository";
 import { RedisModule } from "@liaoliaots/nestjs-redis";
+import FavoritesController from './favorites/favorites.controller';
 
 /**
  * Nestjs heavily relies on Dependency Injection and IoC.
@@ -64,7 +65,7 @@ import { RedisModule } from "@liaoliaots/nestjs-redis";
       },
     }),
   ],
-  controllers: [UsersController, MoviesController, PlanetsController],
+  controllers: [UsersController, MoviesController, PlanetsController, FavoritesController],
   providers: [
     // These are basically going to be instantiated by nestjs and then will be
     // made available to use to each other via constructor parameters
